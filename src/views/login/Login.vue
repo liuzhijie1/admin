@@ -61,7 +61,7 @@ export default {
                 message: "恭喜您登录成功",
                 type: "success",
               });
-              this.$router.push('/home');
+              this.$router.replace('/home');
             } else {
               this.$message({
                 message: data.meta.msg,
