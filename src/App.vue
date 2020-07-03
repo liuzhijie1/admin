@@ -6,4 +6,8 @@
 
 <style lang="less">
  @import url(assets/css/reset.css);
+ @import url(assets/fonts/iconfont.css);
+ body,html,#app{
+   height: 100%;
+ }
 </style>
