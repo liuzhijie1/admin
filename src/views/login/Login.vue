@@ -7,14 +7,18 @@
       <div class="login-box-content">
         <el-form ref="form" :model="userForm" :rules="rules">
           <el-form-item prop="username">
-            <el-input v-model="userForm.username"></el-input>
+            <el-input v-model="userForm.username">
+                <i slot="prefix" class="iconfont icon-user"></i>
+            </el-input>
           </el-form-item>
           <el-form-item prop="password">
             <el-input
               type="password"
               autocomplete="off"
               v-model="userForm.password"
-            ></el-input>
+            >
+            <i slot="prefix" class="iconfont icon-3702mima"></i>
+            </el-input>
           </el-form-item>
           <el-form-item class="btn">
             <el-button type="primary" @click="login">登录</el-button>
