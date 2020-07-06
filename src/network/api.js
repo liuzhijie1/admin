@@ -10,3 +10,15 @@ export const reqLogin = ({username,password})=>{
         }
     })
 }
+
+export const reqMenus = ()=>{
+    return request1('menus');
+}
+
+export const getUsers = (params)=>{
+    return request1({
+        url:'users',
+        method:'get',
+        params,
+    })
+}

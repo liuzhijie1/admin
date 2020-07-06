@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import storage from 'good-storage';
 
 export const request1 = (config)=>{
     let instance = axios.create({
@@ -8,6 +8,7 @@ export const request1 = (config)=>{
     })
 
     instance.interceptors.request.use((config)=>{
+        config.headers.Authorization = storage.session.get('token'); 
         return config;
     })
 
