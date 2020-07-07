@@ -10,4 +10,8 @@
  body,html,#app{
    height: 100%;
  }
+ .el-table {
+  margin-top: 20px;
+  font-size: 12px;
+}
 </style>
