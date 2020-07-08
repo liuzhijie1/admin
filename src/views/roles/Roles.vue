@@ -34,7 +34,7 @@
               @click="deleteRole(prop.row.id)"
               >删除</el-button
             >
-            <el-button type="warning" icon="el-icon-setting" size="mini"
+            <el-button type="warning" icon="el-icon-setting" size="mini" @click="AllotRight(prop.row)"
               >分配权限</el-button
             >
           </template>
@@ -47,12 +47,14 @@
       @hasChanged="ResetData"
       :RoleInfo="roleInfo"
     ></edit-role>
+    <allot-right ref="showAllot" :allotInfo="allotInfo"></allot-right>
   </div>
 </template>
 
 <script>
 import Breadcrumb from "components/Breadcrumb";
 import RoleTreeShow from "./child/RoleTreeShow";
+import AllotRight from './child/AllotRight';
 import AddRole from "./child/AddRole";
 import EditRole from "./child/EditRole";
 import { allRoles, deleteRole } from "network/api";
@@ -63,6 +65,7 @@ export default {
       list: ["首页", "权限管理", "角色列表"],
       tableData: [],
       roleInfo: {},
+      allotInfo:{},
     };
   },
   components: {
@@ -70,6 +73,7 @@ export default {
     RoleTreeShow,
     AddRole,
     EditRole,
+    AllotRight,
   },
   created() {
     this.getAllRoles();
@@ -92,7 +96,7 @@ export default {
       this.$refs["showEditRole"].dialogVisible = true;
     },
     deleteRole(id) {
-      this.$confirm("确认关闭？")
+      this.$confirm("确认删除？")
         .then(async (_) => {
           const data = await deleteRole(id);
           isOk(this, data.meta);
@@ -100,6 +104,11 @@ export default {
         })
         .catch((_) => {});
     },
+    AllotRight(obj){
+      console.log(obj);
+      this.allotInfo=obj;
+      this.$refs['showAllot'].dialogVisible = true;
+    }
   },
 };
 </script>
