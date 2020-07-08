@@ -10,7 +10,7 @@
         </el-table-column>
         <el-table-column prop="level" label="权限等级">
           <template slot-scope="props">
-          <el-button :type="types[props.row.level].type" size="mini" plain>{{types[props.row.level].content}}</el-button>
+          <el-tag :type="types[props.row.level].type" plain>{{types[props.row.level].content}}</el-tag>
           </template>
           </el-table-column>
       </el-table>
@@ -42,7 +42,7 @@ export default {
   methods: {
     async getAllRights() {
       const data = await allRight('list');
-      console.log(data);
+      // console.log(data);
       this.tableData = data.data;
     }
   },

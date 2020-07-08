@@ -97,7 +97,7 @@ export default {
           _this.dialogVisible = false;
           const data = await addUser(_this.ruleForm);
           // console.log(data);
-          isOk(this,data.meta.status,data.meta.msg);
+          isOk(this,data.meta);
           _this.$refs["ruleForm"].resetFields();
           _this.$emit("hasAdd");
         }

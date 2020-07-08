@@ -90,7 +90,7 @@ export default {
         if (bool) {
           _this.dialogVisible = false;
             const data = await editUser({id:this.userinfo.id,...this.ruleForm});
-            isOk(this,data.meta.status,data.meta.msg);
+            isOk(this,data.meta);
           _this.$refs["ruleForm"].resetFields();
           _this.$emit("hasAdd");
         }

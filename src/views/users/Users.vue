@@ -5,12 +5,24 @@
       <el-card class="box-card">
         <el-row :gutter="30">
           <el-col :span="12">
-            <el-input placeholder="请输入内容" v-model="params.query" class="input-with-select" clearable @clear="AllUser">
-              <el-button slot="append" icon="el-icon-search" @click="searchUser"></el-button>
+            <el-input
+              placeholder="请输入内容"
+              v-model="params.query"
+              class="input-with-select"
+              clearable
+              @clear="AllUser"
+            >
+              <el-button
+                slot="append"
+                icon="el-icon-search"
+                @click="searchUser"
+              ></el-button>
             </el-input>
           </el-col>
           <el-col :span="6"
-            ><el-button type="primary" @click="showAddDialog">添加用户</el-button></el-col
+            ><el-button type="primary" @click="showAddDialog"
+              >添加用户</el-button
+            ></el-col
           >
         </el-row>
         <el-table :data="tableData" style="width: 100%" border stripe>
@@ -27,53 +39,55 @@
                 v-model="props.row.mg_state"
                 active-color="#409eff"
                 @change="changeState(props.row)"
-                inactive-color="#eee">
+                inactive-color="#eee"
+              >
               </el-switch>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="props">
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="编辑"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                size="mini"
-                @click="showEditDialog(props.row)"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="删除"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                size="mini"
-                @click="deleteUsers(props.row)"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="设置"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button
-                type="warning"
-                icon="el-icon-setting"
-                size="mini"
-              ></el-button>
-            </el-tooltip>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="编辑"
+                placement="top"
+                :enterable="false"
+              >
+                <el-button
+                  type="primary"
+                  icon="el-icon-edit"
+                  size="mini"
+                  @click="showEditDialog(props.row)"
+                ></el-button>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="删除"
+                placement="top"
+                :enterable="false"
+              >
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  size="mini"
+                  @click="deleteUsers(props.row)"
+                ></el-button>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="设置"
+                placement="top"
+                :enterable="false"
+              >
+                <el-button
+                  type="warning"
+                  icon="el-icon-setting"
+                  size="mini"
+                  @click="showRole(props.row)"
+                ></el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -89,37 +103,48 @@
         </el-pagination>
       </el-card>
     </div>
-    <add-user-dialog  ref="dialog" @hasAdd="AllUser"></add-user-dialog>
-    <edit-user-dialog ref="editlog" :userinfo="userinfo" @hasAdd="AllUser"></edit-user-dialog>
+    <add-user-dialog ref="dialog" @hasAdd="AllUser"></add-user-dialog>
+    <edit-user-dialog
+      ref="editlog"
+      :userinfo="userinfo"
+      @hasAdd="AllUser"
+    ></edit-user-dialog>
+    <allout-user-role
+      ref="role"
+      :userinfo="userinfo"
+      @hasAdd="AllUser"
+    ></allout-user-role>
   </div>
 </template>
 
 <script>
 import Breadcrumb from "components/Breadcrumb.vue";
-import AddUserDialog from './child/AddUserDialog';
-import EditUserDialog from './child/EditUserDialog'
-import { getUsers,changeUserState,deleteUser } from "network/api";
-import {isOk} from 'utils/common'
+import AddUserDialog from "./child/AddUserDialog";
+import EditUserDialog from "./child/EditUserDialog";
+import AlloutUserRole from "./child/AlloutUserRole.vue";
+import { getUsers, changeUserState, deleteUser } from "network/api";
+import { isOk } from "utils/common";
 export default {
   components: {
     Breadcrumb,
     AddUserDialog,
-    EditUserDialog
+    EditUserDialog,
+    AlloutUserRole,
   },
   data() {
     return {
-      userinfo:{},
-      isShow:false,
+      userinfo: {},
+      isShow: false,
       breadList: ["首页", "用户管理", "用户列表"],
       tableData: [],
       currentPage4: 1,
       params: {
-        query:'',
+        query: "",
         pagenum: 1,
         pagesize: 2,
       },
       totalNum: 0,
-      value:true,
+      value: true,
     };
   },
   created() {
@@ -137,7 +162,7 @@ export default {
     async handleSizeChange(num) {
       // console.log('handleSizeChange'+'    ',num);
       this.params.pagesize = num;
-      
+
       let data = await getUsers(this.params);
       // console.log(data);
       this.tableData = data.data.users;
@@ -152,47 +177,57 @@ export default {
       this.tableData = data.data.users;
     },
     // 搜索用户，并且对表格数据进行了重新的赋值
-    async searchUser(){
+    async searchUser() {
       // console.log('搜索用户');
-      let data =await getUsers(this.params)
+      let data = await getUsers(this.params);
       this.tableData = data.data.users;
       // console.log(data);
     },
     // 回到第一页，并且重新请求数据
-    AllUser(){
+    AllUser() {
       // console.log('这里重新请求了');
-      this.params.pagenum = 1;
       this.getusers();
-      this.currentPage4 = 1;
     },
     // 改变用户的状态
-    async changeState(state){
+    async changeState(state) {
       // console.log(state);
-      const data = await changeUserState(state.id,state.mg_state)
-      if(data.meta.status !== 200) return this.$message.error('设置状态失败')
+      const data = await changeUserState(state.id, state.mg_state);
+      if (data.meta.status !== 200) return this.$message.error("设置状态失败");
       this.$message.success(data.meta.msg);
     },
     // 显示添加按钮
-    showAddDialog(){
-      this.$refs['dialog'].dialogVisible = true;
+    showAddDialog() {
+      this.$refs["dialog"].dialogVisible = true;
     },
     // 显示编辑按钮，并且为子组件传值
-    showEditDialog(obj){
+    showEditDialog(obj) {
       // console.log(obj);
       this.userinfo = obj;
-      this.$refs['editlog'].dialogVisible = true;
+      this.$refs["editlog"].dialogVisible = true;
     },
     // 删除用户并且重新刷新
-    async deleteUsers(obj){
+    deleteUsers(obj) {
+      this.$confirm("确认删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(async () => {
+        const data = await deleteUser(obj.id);
+        // console.log(data);
+        isOk(this, data.meta);
+        this.params.pagenum = 1;
+        this.currentPage4 = 1;
+        this.AllUser();
+      }).catch(()=>{})
       // console.log(obj);
-      const data = await deleteUser(obj.id);
-      // console.log(data);
-      isOk(this,data.meta.status,data.meta.msg);
-      this.AllUser();
-    }
+    },
+    showRole(obj) {
+      // console.log(obj);
+      this.userinfo = obj;
+      this.$refs["role"].dialogVisible = true;
+    },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

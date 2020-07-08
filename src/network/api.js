@@ -62,3 +62,50 @@ export const allRight = (type)=>{
         method:'get'
     })
 }
+
+export const allRoles = ()=>{
+    return request1({
+        url:'roles',
+        method:'get'
+    })
+}
+
+export const allotRole = (userId,rid)=>{
+    return request1({
+        url:`users/${userId}/role`,
+        method:'put',
+        data:{
+            rid,
+        }
+    })
+}
+
+export const deleteUserRight = (userId,rid)=>{
+    return request1({
+        url:`roles/${userId}/rights/${rid}`,
+        method:'delete'
+    })
+}
+
+export const AddRoles = (data)=>{
+    return request1({
+        url:"roles",
+        method:'post',
+        data,
+    })
+}
+
+export const editRoles = (id,data) => {
+    return request1({
+        url:`roles/${id}`,
+        method:'put',
+        data,
+    })
+}
+
+export const deleteRole = (id)=>{
+    return request1({
+        url:`roles/${id}`,
+        method:'delete'
+    })
+}
