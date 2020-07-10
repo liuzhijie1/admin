@@ -172,3 +172,49 @@ export const getTimeLine = () => {
         method:'get'
     })
 }
+
+// 添加分类
+export const AddCatrgoried = (data) => {
+    return request1({
+        url:'categories',
+        method:'post',
+        data,
+    })
+}
+
+// 获取参数列表
+export const getAllAttributes = (id,params) => {
+    return request1({
+        url:`categories/${id}/attributes`,
+        method:'get',
+        params,
+    })
+}
+
+
+// 添加动态参数或者静态属性
+export const AddAttribute = (id,data)=>{
+    return request1({
+        url:`categories/${id}/attributes`,
+        method:'post',
+        data,
+    })
+}
+
+// 编辑提交参数
+export const EditSubmitAttribute = (Id,attrId,data) => {
+    return request1({
+        url:`categories/${Id}/attributes/${attrId}`,
+        method:'put',
+        data,
+    })
+}
+
+
+// 删除参数
+export const DeleteAttribute = (id,attrId) => {
+    return request1({
+        url:`categories/${id}/attributes/${attrId}`,
+        method:'delete'
+    })
+}
