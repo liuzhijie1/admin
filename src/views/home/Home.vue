@@ -29,7 +29,8 @@
                 <i :class="'iconfont icon-'+icons[item.id]"></i>
                 <span>{{item.authName}}</span>
               </template>
-              <el-menu-item :index="item1.path+''" v-for="(item1,j) in item.children" :key="j">
+              <!-- 这里需要注意如果router如果没加(/) 的化默认是替换，加了代表根路径的重新选择 -->
+              <el-menu-item :index="'/'+item1.path+''" v-for="(item1,j) in item.children" :key="j">
                 <template slot="title">
                   <i class="el-icon-menu"></i>
                   {{ item1.authName }}
@@ -114,7 +115,7 @@ export default {
         return this.$route.fullPath.indexOf(item) >= 0;
       })
       if(active == undefined) return;
-      return active.slice(1);
+      return active;
     }
   },
 };

@@ -101,6 +101,13 @@ Vue.use(VueRouter)
           meta:{
             title:'报表'
           }
+        },
+        {
+          path:'/goods/add',
+          component:()=>import('views/goods/child/AddGoods.vue'),
+          meta:{
+            title:'添加商品',
+          }
         }
       ]
     }

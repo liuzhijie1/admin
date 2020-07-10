@@ -12,7 +12,7 @@
       <el-table :data="tableData" style="width: 100%" border stripe>
         <el-table-column type="expand">
           <template slot-scope="prop">
-            <role-tree-show :showTree="prop.row"></role-tree-show>
+            <role-tree-show :showTree="prop.row" @changAllot="resetThis"></role-tree-show>
           </template>
         </el-table-column>
         <el-table-column type="index"></el-table-column>
@@ -47,7 +47,7 @@
       @hasChanged="ResetData"
       :RoleInfo="roleInfo"
     ></edit-role>
-    <allot-right ref="showAllot" :allotInfo="allotInfo"></allot-right>
+    <allot-right ref="showAllot" :allotInfo="allotInfo" @initAllotInfo="initAllotInfo" :ResetData="ResetData"></allot-right>
   </div>
 </template>
 
@@ -108,6 +108,18 @@ export default {
       console.log(obj);
       this.allotInfo=obj;
       this.$refs['showAllot'].dialogVisible = true;
+    },
+    initAllotInfo(){
+      this.allotInfo = {};
+    },
+    resetThis(id,array){
+      // console.log(id);
+      // console.log(array);
+      this.tableData.forEach((item,index)=>{
+        if(item.id == id){
+          item.children = array;
+        }
+      })
     }
   },
 };

@@ -146,3 +146,29 @@ export const AllGoods = (params)=> {
         params,
     })
 }
+
+// 获取商品分类数据列表
+export const AllCategories = (params)=>{
+    return request1({
+        url:'categories',
+        method:'get',
+        params,
+    })
+}
+
+// 获得订单数据列表
+export const AllOrders = (params) => {
+    return request1({
+        url:'orders',
+        method:'get',
+        params,
+    })
+}
+
+// 获取基于时间统计的折线图
+export const getTimeLine = () => {
+    return request1({
+        url:'reports/type/1',
+        method:'get'
+    })
+}

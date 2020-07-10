@@ -59,6 +59,9 @@ export default {
         .then(async () => {
           const data = await deleteUserRight(this.showTree.id, id);
           this.roleinfo = data.data;
+          // this.showTree = data.data;
+          this.$emit('changAllot',this.showTree.id,data.data);
+          // this.$emit('hasChanged');
           isOk(this, data.meta);
         })
         .catch(() => {});

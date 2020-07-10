@@ -28,11 +28,15 @@
         <el-table-column type="index"></el-table-column>
         <el-table-column prop="goods_name" label="商品名称" width="700">
         </el-table-column>
-        <el-table-column prop="goods_price" label="商品价格(元)">
+        <el-table-column prop="goods_price" label="商品价格(元)" width="100">
         </el-table-column>
         <el-table-column prop="goods_weight" label="商品重量">
         </el-table-column>
-        <el-table-column prop="add_time" label="创建时间"> </el-table-column>
+        <el-table-column prop="add_time" label="创建时间" width="150">
+          <template slot-scope="prop">
+            {{prop.row.add_time | timeFormat}}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="150">
           <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
           <el-button
@@ -45,12 +49,12 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :page-sizes="[2, 5, 10, 20]"
+        :page-sizes="[5, 10, 20, 50]"
         :page-size="10"
         :current-page="1"
         background
         layout="total,sizes,prev, pager, next,jumper"
-        :total="150"
+        :total="total"
       >
       </el-pagination>
     </el-card>
@@ -73,6 +77,7 @@ export default {
         pagesize: 10,
       },
       tableData: [],
+      total:0,
     };
   },
   created() {
@@ -81,6 +86,7 @@ export default {
   methods: {
     AddGoods() {
       console.log("添加商品");
+      this.$router.push('/goods/add');
     },
     clearSearch() {
       console.log("清除搜索数据，重新请求");
@@ -92,12 +98,15 @@ export default {
       const data = await AllGoods(this.params);
       console.log(data);
       this.tableData = data.data.goods;
+      this.total = data.data.total;
     },
     handleSizeChange(num) {
-      console.log(num);
+      this.params.pagesize = num;
+      this.getAllGoods();
     },
     handleCurrentChange(num) {
-      console.log(num);
+      this.params.pagenum = num;
+      this.getAllGoods();
     },
   },
 };
