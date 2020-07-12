@@ -7,8 +7,10 @@
           placeholder="请输入内容"
           v-model="params.query"
           class="input-with-select"
+          @clear="clearSearch"
+          clearable
         >
-          <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="SearchOrder"></el-button>
         </el-input>
       </div>
       <el-table :data="tableData" style="width: 100%" border stripe>
@@ -29,12 +31,15 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200">
-          <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+          <template slot-scope="prop">
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="editInfo"></el-button>
           <el-button
             type="success"
             icon="el-icon-location"
             size="mini"
+            @click="checkOrderInfo(prop.row.order_id)"
           ></el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -47,15 +52,21 @@
       :total="total">
     </el-pagination>
     </el-card>
+    <OrderInfo ref="showOrderInfo" :activities="OrderInfo"></OrderInfo>
+    <EditInfo ref="showEditInfo"></EditInfo>
   </div>
 </template>
 
 <script>
 import Breadcrumb from "components/Breadcrumb.vue";
-import { AllOrders } from "network/api";
+import { AllOrders,CheckOrderInfo } from "network/api";
+import OrderInfo from './child/OrderInfo';
+import EditInfo from './child/EditInfo'
 export default {
   components: {
     Breadcrumb,
+    OrderInfo,
+    EditInfo
   },
   data() {
     return {
@@ -74,6 +85,7 @@ export default {
       },
       tableData: [],
       total:0,
+      OrderInfo:[]
     };
   },
   created() {
@@ -94,6 +106,23 @@ export default {
       // console.log(num);
       this.params.pagenum = num;
       this.getAllOrders();
+    },
+    SearchOrder(){
+      console.log('搜索订单')
+    },
+    clearSearch(){
+      console.log('清除');
+    },
+    async checkOrderInfo(id){
+      console.log('搜索订单信息');
+      id = 804909574412544580;   //设置模拟数据
+      const result = await CheckOrderInfo(id);
+      this.OrderInfo = result.data;
+      this.$refs['showOrderInfo'].dialogVisible = true;
+      console.log(result);
+    },
+    editInfo(){
+      this.$refs['showEditInfo'].dialogVisible = true;
     }
   },
 };

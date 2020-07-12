@@ -2,27 +2,48 @@
   <div class="params-table">
     <el-row>
       <el-col :span="10">
-        <el-button type="primary" @click="showMyDialog" :disabled="ID == -1">{{
-          "添加" + ActiveName
-        }}</el-button>
+        <el-button type="primary" @click="showMyDialog" :disabled="ID == -1">
+          {{ "添加" + ActiveName }}
+        </el-button>
       </el-col>
     </el-row>
     <el-table :data="tableData" style="width: 100%" border stripe>
       <el-table-column type="expand">
         <template slot-scope="prop">
-          <el-tag
-            :key="tag"
-            v-for="(tag, index) in prop.row.listTags"
-            closable
-            :disable-transitions="false"
-            @close="handleCloseTag(prop.row, index)"
+          <template
+            v-if="prop.row.listTags.length > 0"
           >
-            {{ tag }}
-          </el-tag>
+            <el-tag
+              :key="tag"
+              v-for="(tag, index) in prop.row.listTags"
+              closable
+              :disable-transitions="false"
+              @close="handleCloseTag(prop.row, index)"
+              >{{ tag }}</el-tag
+            >
+          </template>
+          <el-input
+            class="input-new-tag"
+            v-if="prop.row.inputVisible"
+            v-model="prop.row.inputValue"
+            ref="saveTagInput"
+            size="small"
+            style="width:100px"
+            @keyup.enter.native="handleInputConfirm(prop.row)"
+            @blur="handleInputConfirm(prop.row)"
+          >
+          </el-input>
+          <el-button
+            v-else
+            class="button-new-tag"
+            size="small"
+            @click="showInput(prop.row)"
+            >+ New Tag</el-button
+          >
         </template>
       </el-table-column>
-      <el-table-column type="index" label="#"> </el-table-column>
-      <el-table-column prop="attr_name" label="参数名称"> </el-table-column>
+      <el-table-column type="index" label="#"></el-table-column>
+      <el-table-column prop="attr_name" label="参数名称"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="prop">
           <el-button
@@ -74,6 +95,7 @@ import {
   EditSubmitAttribute,
   DeleteAttribute,
 } from "network/api";
+import { isOk } from "utils/common";
 export default {
   props: {
     activeName: {
@@ -106,6 +128,29 @@ export default {
     };
   },
   methods: {
+    async handleInputConfirm(obj) {
+      let inputValue = obj.inputValue;
+      if (inputValue) {
+        obj.listTags.push(inputValue);
+      }else{
+        return ;
+      }
+      let temp = {
+        attr_name: obj.attr_name,
+        attr_sel: obj.attr_sel,
+        attr_vals: obj.listTags.join(" "),
+      }
+      const result = await EditSubmitAttribute(this.ID,obj.attr_id,temp);
+      isOk(this,result.meta);
+      obj.inputVisible = false;
+      obj.inputValue = '';
+    },
+    showInput(obj) {
+      obj.inputVisible = true;
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
     showMyDialog() {
       this.dialogVisible = true;
     },
@@ -116,9 +161,16 @@ export default {
       this.$refs["ruleForm"].clearValidate();
       this.ruleForm.attribute = "";
     },
-    handleCloseTag(obj, index) {
-    //   console.log(obj, index);
+    async handleCloseTag(obj, index) {
+      //   console.log(obj, index);
       obj.listTags.splice(index, 1);
+      let temp = {
+        attr_name: obj.attr_name,
+        attr_sel: obj.attr_sel,
+        attr_vals: obj.listTags.join(" "),
+      };
+      const result = await EditSubmitAttribute(this.ID, obj.attr_id, temp);
+      isOk(this, result.meta);
       // obj.listTags.pop();
     },
     EditDialog(obj) {
@@ -155,10 +207,16 @@ export default {
       const result = await getAllAttributes(this.ID, { sel: this.activeName });
       //   这里有个大Bug ，只有Data中的数据具有响应式的特点，所以在设置data之前，设计好数据，而不是之后设置。
       result.data.forEach((item, index) => {
-        item.listTags = item.attr_vals.split(" ");
+        if(item.attr_vals){
+          item.listTags = item.attr_vals.split(" ");
+        }else{
+          item.listTags = [];
+        }
+        item.inputValue = "";
+        item.inputVisible = false;
       });
       this.tableData = result.data;
-    //   console.log(result);
+      console.log(result);
     },
   },
   computed: {

@@ -218,3 +218,21 @@ export const DeleteAttribute = (id,attrId) => {
         method:'delete'
     })
 }
+
+
+// 删除商品
+export const DeleteGoods = (id) => {
+    return request1({
+        url:`goods/${id}`,
+        method:'delete'
+    })
+}
+
+
+//  查看物流信息  需要说明的是这里是死数据需要模拟的
+export const CheckOrderInfo = (id) => {
+    return request1({
+        url:`/kuaidi/${id}`,
+        method:'get'
+    })
+}

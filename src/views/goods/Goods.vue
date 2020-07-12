@@ -26,24 +26,30 @@
       </el-row>
       <el-table :data="tableData" style="width: 100%" border stripe>
         <el-table-column type="index"></el-table-column>
-        <el-table-column prop="goods_name" label="商品名称" width="700">
-        </el-table-column>
+        <el-table-column prop="goods_name" label="商品名称"> </el-table-column>
         <el-table-column prop="goods_price" label="商品价格(元)" width="100">
         </el-table-column>
-        <el-table-column prop="goods_weight" label="商品重量">
+        <el-table-column prop="goods_weight" label="商品重量" width="100">
         </el-table-column>
         <el-table-column prop="add_time" label="创建时间" width="150">
           <template slot-scope="prop">
-            {{prop.row.add_time | timeFormat}}
+            {{ prop.row.add_time | timeFormat }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150">
-          <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-delete"
-            size="mini"
-          ></el-button>
+        <el-table-column label="操作" width="130">
+          <template slot-scope="prop">
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+            ></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              @click="deleteGoods(prop.row.goods_id)"
+            ></el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -63,7 +69,8 @@
 
 <script>
 import Breadcrumb from "components/Breadcrumb.vue";
-import { AllGoods } from "network/api";
+import { AllGoods, DeleteGoods } from "network/api";
+import { isOk } from "utils/common";
 export default {
   components: {
     Breadcrumb,
@@ -77,7 +84,7 @@ export default {
         pagesize: 10,
       },
       tableData: [],
-      total:0,
+      total: 0,
     };
   },
   created() {
@@ -86,13 +93,29 @@ export default {
   methods: {
     AddGoods() {
       console.log("添加商品");
-      this.$router.push('/goods/add');
+      this.$router.push("/goods/add");
+    },
+    deleteGoods(id) {
+      this.$confirm("此操作将永久删除该商品, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const result = await DeleteGoods(id);
+          isOk(this, result.meta);
+          this.getAllGoods();
+        })
+        .catch(() => {});
     },
     clearSearch() {
-      console.log("清除搜索数据，重新请求");
+      this.params.query = "";
+      this.params.pagenum = 1;
+      this.params.pagesize = 10;
+      this.getAllGoods();
     },
     SearchGoods() {
-      console.log("搜索商品");
+      this.getAllGoods();
     },
     async getAllGoods() {
       const data = await AllGoods(this.params);
