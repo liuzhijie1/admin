@@ -54,8 +54,13 @@
         <el-tab-pane label="商品参数" name="second">配置管理</el-tab-pane>
         <el-tab-pane label="商品属性" name="third">角色管理</el-tab-pane>
         <el-tab-pane label="商品图片" name="fourth">定时任务补偿</el-tab-pane>
-        <el-tab-pane label="商品内容" name="five">
-          
+        <el-tab-pane label="商品内容" name="five" class="five">
+          <quill-editor
+    v-model="content"
+    :options="editorOption"
+    @change="onEditorChange($event)"
+  ></quill-editor>
+  <el-button type="primary" class="addBtn">添加商品</el-button>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -111,6 +116,10 @@ export default {
       options: [],
       value:[],
       ok:'',
+      content: '',
+      editorOption: {
+          // Some Quill options...
+        }
     };
   },
   created() {
@@ -164,5 +173,15 @@ export default {
 }
 .el-cascader{
   width: 100%;
+}
+/* .quill-editor{
+  height: 170px;
+} */
+.five{
+  min-height: 300px;
+  /* position: relative; */
+}
+.addBtn{
+  margin-top: 15px;
 }
 </style>

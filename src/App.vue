@@ -14,4 +14,7 @@
   margin-top: 20px;
   font-size: 12px;
 }
+.ql-editor{
+  height: 200px !important;
+}
 </style>
