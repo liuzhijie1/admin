@@ -236,3 +236,23 @@ export const CheckOrderInfo = (id) => {
         method:'get'
     })
 }
+
+
+// 编辑提交分类
+export const EditSubmitClassify = (id,cat_name) =>{
+    return request1({
+        url: `categories/${id}`,
+        method:'put',
+        data:{
+            cat_name,
+        }
+    })
+}
+
+// 删除分类
+export const DeleteClassify = (id) => {
+    return request1({
+        url:`categories/${id}`,
+        method:'delete'
+    })
+}

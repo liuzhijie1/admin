@@ -30,11 +30,19 @@
           >
           <el-tag type="warning" v-else size="mini">三级</el-tag>
         </template>
-        <template slot="operations">
-          <el-button type="primary" icon="el-icon-edit" size="mini"
+        <template slot="operations" slot-scope="prop">
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            size="mini"
+            @click="showEdit(prop.row)"
             >编辑</el-button
           >
-          <el-button type="danger" icon="el-icon-delete" size="mini"
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            @click="deleteC(prop.row.cat_id)"
             >删除</el-button
           >
         </template>
@@ -53,6 +61,11 @@
         ref="addCategoriesDialog"
         @hasChanged="refreshDate"
       ></add-categories>
+      <EditCatrgories
+        ref="showEditDialog"
+        :editInfo="editInfo"
+        @hasChanged="getAllCategories"
+      ></EditCatrgories>
     </el-card>
   </div>
 </template>
@@ -60,11 +73,14 @@
 <script>
 import Breadcrumb from "components/Breadcrumb.vue";
 import AddCategories from "./child/AddCategories";
-import { AllCategories } from "network/api";
+import EditCatrgories from "./child/EditCatrgories";
+import { AllCategories, DeleteClassify } from "network/api";
+import { isOk } from "utils/common";
 export default {
   components: {
     Breadcrumb,
     AddCategories,
+    EditCatrgories,
   },
   data() {
     return {
@@ -76,6 +92,7 @@ export default {
       },
       tableData: [],
       total: 0,
+      editInfo: {},
       columns: [
         {
           label: "分类名称",
@@ -120,16 +137,40 @@ export default {
       this.params.pagesize = 5;
       this.getAllCategories();
     },
-    handleSizeChange(num){
+    handleSizeChange(num) {
       // console.log('每页的大小改变');
       this.params.pagesize = num;
       this.getAllCategories();
     },
-    handleCurrentChange(num){
+    handleCurrentChange(num) {
       // console.log('当前的页数改变');
       this.params.pagenum = num;
       this.getAllCategories();
-    }
+    },
+    showEdit(obj) {
+      console.log(obj);
+      this.editInfo = obj;
+      this.$refs["showEditDialog"].dialogVisible = true;
+    },
+    deleteC(id) {
+      this.$confirm("此操作将永久删除该分类, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const result = await DeleteClassify(id);
+          console.log(result);
+          isOk(this, result.meta);
+          this.getAllCategories();
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });  
+        });
+    },
   },
 };
 </script>
