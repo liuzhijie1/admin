@@ -256,3 +256,21 @@ export const DeleteClassify = (id) => {
         method:'delete'
     })
 }
+
+//  添加商品
+export const AddGoods = (data)=>{
+    return request1({
+        url:`goods`,
+        method:'post',
+        data,
+    })
+}
+
+// 编辑提交商品
+export const EditGoods = (id,data) => {
+    return request1({
+        url:`goods/${id}`,
+        method:'put',
+        data,
+    })
+}

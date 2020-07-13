@@ -42,6 +42,7 @@
               type="primary"
               icon="el-icon-edit"
               size="mini"
+              @click="editGoods(prop.row)"
             ></el-button>
             <el-button
               type="danger"
@@ -64,6 +65,7 @@
       >
       </el-pagination>
     </el-card>
+    <EditGoods ref="showEditGoods" :EditOneGoods="EditOneGoods"></EditGoods>
   </div>
 </template>
 
@@ -71,9 +73,11 @@
 import Breadcrumb from "components/Breadcrumb.vue";
 import { AllGoods, DeleteGoods } from "network/api";
 import { isOk } from "utils/common";
+import EditGoods from './child/EditGoods';
 export default {
   components: {
     Breadcrumb,
+    EditGoods
   },
   data() {
     return {
@@ -85,6 +89,7 @@ export default {
       },
       tableData: [],
       total: 0,
+      EditOneGoods:{},
     };
   },
   created() {
@@ -131,6 +136,11 @@ export default {
       this.params.pagenum = num;
       this.getAllGoods();
     },
+    editGoods(obj){
+      console.log(obj);
+      this.EditOneGoods = obj;
+      this.$refs['showEditGoods'].dialogVisible = true;
+    }
   },
 };
 </script>

@@ -60,6 +60,7 @@
 <script>
 import Breadcrumb from "components/Breadcrumb.vue";
 import { AllOrders,CheckOrderInfo } from "network/api";
+import {isOk} from 'utils/common'
 import OrderInfo from './child/OrderInfo';
 import EditInfo from './child/EditInfo'
 export default {
@@ -95,6 +96,7 @@ export default {
     async getAllOrders() {
       const data = await AllOrders(this.params);
       console.log(data);
+      isOk(this,data.meta);
       this.tableData = data.data.goods;
       this.total = data.data.total;
     },
@@ -108,10 +110,14 @@ export default {
       this.getAllOrders();
     },
     SearchOrder(){
-      console.log('搜索订单')
+      console.log('搜索订单');
+      if(this.params.query == '') return;
+      this.getAllOrders();
     },
     clearSearch(){
-      console.log('清除');
+      this.params.pagenum = 1;
+      this.params.pagesize = 10;
+      this.getAllOrders();
     },
     async checkOrderInfo(id){
       console.log('搜索订单信息');

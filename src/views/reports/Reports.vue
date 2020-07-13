@@ -8,6 +8,7 @@
 </template>
 
 <script>
+// 这里可以采用lodash来进行优化
 import echarts from "echarts";
 import Breadcrumb from "components/Breadcrumb.vue";
 import { getTimeLine } from "network/api";
